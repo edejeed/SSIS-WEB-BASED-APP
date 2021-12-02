@@ -38,7 +38,18 @@ FLASK_RUN_PORT=8080
 
 5. Create .flaskenv file and write the following:
 
-```bash
+
 Load the script SQL to your MYSQL IDE
+
+
+## RUN THE APP
+
+1. Activate Virtualenv
+```bash
+.\env\Scripts\activate
 ```
 
+2. RUN THE APP
+```bash
+flask run
+```
