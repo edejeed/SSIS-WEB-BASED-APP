@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %} Courses {% endblock %}
+
+{% block con %}
+<form id="submitbtn" action="/searchcourse" method="POST" class="form-inline">
+ <input type="text" class="form-control" name="searchInput" id="searchInput" placeholder="Search Courses" aria-label="State"> 
+
+ <div class="form-group">
+  <div class="input-group mt-3" > 
+    <select class="custom-select" id="course" name="course">
+      <option disabled selected="">Select Field</option>
+      <option value="0">Course Code</option>
+      <option value="1">Course</option>
+      <option value="2">College</option>
+    </select>
+  </div>
+</div>
+
+</form>
+ {% endblock %}
+
+{% block add %} Add New {% endblock %}
+
+{% block modal %} 
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">  
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{% block head %} Add Course {% endblock %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('course.cours') }}" method="POST">
+
+          <div class="form-group">
+             <label>Course Code:</label>
+              <input type="text" class="form-control" name="code" value="">
+          </div>
+
+          <div class="form-group">
+             <label>Course:</label>
+
+             <input type="text" class="form-control" name="course" value="">
+          </div> 
+
+          <div class="form-group">
+            College:
+            <div class="input-group mb-3" > 
+              <select class="custom-select" id="college" name="college" value="">
+                <option selected="">Select a College</option>
+                {% for co in col %}
+                <option>{{co.1}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <br />
+
+          <div class="form-group">
+            <button class="btn btn-success" type="submit" >Save changes</button>
+          </div>
+
+       </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block editmodal %} 
+{% for row in courses%}
+<div class="modal fade" id="modaledit{{row.0}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">  
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('course.update_course') }}" method="POST">
+
+          <div class="form-group">
+             <label>Course Code:</label>
+              <input type="hidden"  name="id" value="{{row.0}}"> 
+              <input type="text" class="form-control" name="code" value="{{row.1}}">
+          </div>
+
+          <div class="form-group">
+             <label>Course:</label>
+
+             <input type="text" class="form-control" name="course" value="{{row.2}}">
+          </div> 
+
+         <div class="form-group">
+          College:
+          <div class="input-group mb-3" >   
+            <select class="custom-select" name="college" >
+              <option disabled selected="">{{row.3}}</option>
+              {% for co in col %}
+              <option>{{co.1}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+         
+          <br />
+
+          <div class="form-group">
+            <button class="btn btn-success" type="submit" >Save changes</button>
+          </div>
+
+       </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor  %}
+        
+{% endblock %} 
+
+{% block content %}
+<section class="content">
+        <div class="container pb-3 scrollable">
+        <table class="table sticky text-center">
+            <thead>
+              <tr>
+                <th scope="col">Course Code</th>
+                <th scope="col">Course</th>
+                <th scope="col">College</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+    
+            <tbody>
+                {% for row in courses %}
+              <tr>
+                <td>{{row.1}}</td>
+                <td>{{row.2}}</td>
+                <td>{{row.3}}</td>
+                <td>
+                  <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" >edit</a>
+                    <a href="/delete/{{ row.0 }}" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure For Delete?')">delete</a>
+                </td>
+              </tr>
+              {% endfor  %}
+            </tbody>
+          </table>
+        </div>
+    
+    </section>
+
+
+{% endblock %}

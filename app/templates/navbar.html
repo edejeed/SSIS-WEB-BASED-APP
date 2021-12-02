@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand"><img src="/static/img/SSIS..png" alt="logo"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav ms-auto">
+        <a  href="{{ url_for('student.home') }}">STUDENTS</a>
+        <a  href="{{ url_for('course.courses') }}">COURSES</a>
+        <a  href="{{ url_for('college.colleges') }}">COLLEGES</a>
+      </div>
+      <script type="text/javascript">
+        const currentLocation = location.href;
+        const menuItem = document.querySelectorAll('a');
+        const menuLength = menuItem.length
+        for (let i = 0; i<menuLength; i++ ){
+          if(menuItem[i].href === currentLocation)
+            menuItem[i].className = "active"
+        }
+      
+      </script>
+    </div>
+  </div>
+</nav>
+

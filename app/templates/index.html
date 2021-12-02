@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %} SSIS. {% endblock %}
+
+{% block con %}
+<form id="submitbtn" action="/searchstudent" method="POST" class="form-inline">
+ <input type="text" class="form-control" name="searchInput" id="searchInput" placeholder="Search Student" aria-label="State"> 
+ <div class="form-group">
+  <div class="input-group mt-3" > 
+    <select class="custom-select" id="student" name="student">
+      <option disabled selected="">Select Field</option>
+      <option value="0">ID</option>
+      <option value="1">First Name</option>
+      <option value="2">Last Name</option>
+      <option value="3">Course</option>
+      <option value="4">Year Level</option>
+      <option value="5">Gender</option>
+    </select>
+  </div>
+</div>
+
+</form>
+ {% endblock %}
+
+{% block add %} Add New {% endblock %}
+
+{% block modal %} 
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">  
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{% block head %} Add Students {% endblock %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('student.insert') }}" method="POST">
+          <div class="form-group">
+             <label>ID:</label>
+              <input type="text" class="form-control" name="id" value="">
+          </div>
+
+          <div class="form-group">
+             <label>First Name:</label>
+             <input type="text" class="form-control" name="first" value="">
+          </div>
+
+          <div class="form-group">
+             <label>Last Name:</label>
+             <input type="text" class="form-control" name="last" value="">
+          </div>
+
+          <div class="form-group">
+            Course:
+            <div class="input-group mb-3" > 
+              <select class="custom-select" id="course" name="course" required>
+                <option selected="">Select a Course</option>
+                {% for co in cor %}
+                <option>{{co.1}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+         
+          <div class="form-group">
+            Year Level:
+            <div class="input-group mb-3" > 
+              <select class="custom-select" id="level" name="year" required>
+                <option disabled selected="">Select Year Level</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            Gender:
+            <div class="input-group mb-3" > 
+              <select class="custom-select" id="gender" name="gender" required>
+                <option selected="">Select Gender</option>
+                <option>M</option>
+                <option>F</option>
+              </select>
+            </div>
+          </div>
+
+     <br />
+     <div class="form-group">
+      <button class="btn btn-success" type="submit" >Save changes</button>
+     </div>
+
+       </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block editmodal %} 
+{% for row in students %}
+<div class="modal fade" id="modaledit{{row.0}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">  
+    <div class="modal-content">
+      <div class="modal-body">
+        <form action="{{ url_for('student.update_student') }}" method="POST">
+          <div class="form-group">
+             <label>ID:</label>
+              <input type="hidden"  name="studid" value="{{row.0}}"> 
+              <input type="text" class="form-control" name="id" value="{{row.1}}">
+          </div>
+
+          <div class="form-group">
+             <label>First Name:</label>
+             <input type="text" class="form-control" name="first" value="{{row.2}}">
+          </div>
+
+
+          <div class="form-group">
+             <label>Last Name:</label>
+             <input type="text" class="form-control" name="last" value="{{row.3}}">
+          </div>
+
+          <div class="form-group">
+            Course:
+            <div class="input-group mb-3" > 
+              <select class="custom-select" name="course" required>
+                <option disabled selected="">{{row.4}}</option>
+                {% for co in cor %}
+                <option>{{co.1}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+         
+          <div class="form-group">
+            Year Level:
+            <div class="input-group mb-3" > 
+              <select class="custom-select" name="year" required>
+                <option disabled selected="">{{row.5}}</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div>
+
+       <div class="form-group">
+        Gender:
+        <div class="input-group mb-3" > 
+          <select class="custom-select" name="gender" required>
+            <option disabled >{{row.6}}</option>
+            <option>M</option>
+            <option>F</option>
+          </select>
+        </div>
+      </div>
+
+     <br />
+     <div class="form-group">
+      <button class="btn btn-success" type="submit" >Save changes</button>
+     </div>
+
+       </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor  %}
+        
+{% endblock %} 
+
+{% block content %}
+
+<section class="content">
+    <div class="container pb-3 scrollable">
+    <table class="table sticky text-center">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Course</th>
+            <th scope="col">Year Level</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for row in students %}
+          <tr>
+            <td>{{row.1}}</td>
+            <td>{{row.2}}</td>
+            <td>{{row.3}}</td>
+            <td>{{row.4}}</td>
+            <td>{{row.5}}</td>
+            <td>{{row.6}}</td>
+            <td>
+              <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" >edit</a>
+              <a href="/delete_stud/{{ row.0 }}" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure For Delete?')">delete</a>
+            </td>
+          </tr>
+          {% endfor  %}
+        </tbody>
+      </table>
+    </div>
+
+</section>
+
+{% endblock %}
