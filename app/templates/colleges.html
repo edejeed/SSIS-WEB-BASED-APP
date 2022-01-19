@@ -122,8 +122,8 @@
                 <td>{{row.1}}</td>
                 <td>{{row.2}}</td>
                 <td>
-                  <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" >edit</a>
-                  <a href="/delete_college/{{ row.0 }}" class="btn btn-danger btn-sm" onclick= "return confrim('Are You Sure To Delete?')">Delete</a>
+                  <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" ><i class="bi bi-pencil-square"></i></a>
+                  <a href="/delete_college/{{ row.0 }}" class="btn btn-danger btn-sm" onclick= "return confrim('Are You Sure To Delete?')"><i class="bi bi-trash"></i></a>
                 </td>
               </tr>
               {% endfor  %}

@@ -1,8 +1,15 @@
 from flask import Flask
 from os import getenv
+import cloudinary.uploader
 from flask_mysqldb import MySQL
 
-mysql = MySQL()
+cloudinary.config(
+    cloud_name = getenv('CLOUD_NAME'),
+    api_key = getenv('API_KEY'),
+    api_secret = getenv('API_SECRET')
+)
+
+mysql = MySQL() 
 
 def create_app() -> object:
     app = Flask(__name__)
@@ -11,7 +18,6 @@ def create_app() -> object:
     app.config['MYSQL_USER'] = getenv("DB_USERNAME")
     app.config['MYSQL_PASSWORD'] = getenv("DB_PASSWORD")
     app.config['MYSQL_DB'] = getenv("DB_NAME")
-
     mysql.init_app(app)
 
     # import blueprints
@@ -26,3 +32,5 @@ def create_app() -> object:
     app.register_blueprint(college)
 
     return app
+
+    

@@ -148,8 +148,8 @@
                 <td>{{row.2}}</td>
                 <td>{{row.3}}</td>
                 <td>
-                  <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" >edit</a>
-                    <a href="/delete/{{ row.0 }}" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure For Delete?')">delete</a>
+                  <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" ><i class="bi bi-pencil-square"></i></a>
+                    <a href="/delete/{{ row.0 }}" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure For Delete?')"><i class="bi bi-trash"></i></a>
                 </td>
               </tr>
               {% endfor  %}

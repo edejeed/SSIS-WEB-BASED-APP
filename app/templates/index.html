@@ -33,10 +33,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="{{ url_for('student.insert') }}" method="POST">
+        <form action="{{ url_for('student.home') }}" enctype = "multipart/form-data" method="POST">
+          {{form.hidden_tag()}}
           <div class="form-group">
              <label>ID:</label>
               <input type="text" class="form-control" name="id" value="">
+          </div>
+          
+          <div class="form-group mt-3">
+            <p>Photo:{{form.profile()}}</p>
           </div>
 
           <div class="form-group">
@@ -52,15 +57,21 @@
           <div class="form-group">
             Course:
             <div class="input-group mb-3" > 
-              <select class="custom-select" id="course" name="course" required>
+              <select class="custom-select" id="course" name="course" type="text" required>
                 <option selected="">Select a Course</option>
+                {% for col in college %}
+                <optgroup label="{{col.1}}">
                 {% for co in cor %}
+                {% if co.3 == col.1%}
                 <option>{{co.1}}</option>
+                {%endif%}
                 {% endfor %}
+              </optgroup>
+              {%endfor%}
               </select>
             </div>
           </div>
-         
+          
           <div class="form-group">
             Year Level:
             <div class="input-group mb-3" > 
@@ -88,7 +99,7 @@
 
      <br />
      <div class="form-group">
-      <button class="btn btn-success" type="submit" >Save changes</button>
+      <button class="btn save" type="submit" >Save changes</button>
      </div>
 
        </form>
@@ -107,11 +118,15 @@
   <div class="modal-dialog">  
     <div class="modal-content">
       <div class="modal-body">
-        <form action="{{ url_for('student.update_student') }}" method="POST">
+        <form action="{{ url_for('student.update_student') }}" enctype = "multipart/form-data" method="POST">
+          {{form.hidden_tag()}}
           <div class="form-group">
              <label>ID:</label>
               <input type="hidden"  name="studid" value="{{row.0}}"> 
               <input type="text" class="form-control" name="id" value="{{row.1}}">
+          </div>
+          <div class="form-group mt-3">
+            <p>Photo:{{form.profile()}}</p>
           </div>
 
           <div class="form-group">
@@ -164,7 +179,7 @@
 
      <br />
      <div class="form-group">
-      <button class="btn btn-success" type="submit" >Save changes</button>
+      <button class="btn save" type="submit" >Save changes</button>
      </div>
 
        </form>
@@ -182,11 +197,14 @@
 {% block content %}
 
 <section class="content">
+  <div class="row">
+    <div class="col">
     <div class="container pb-3 scrollable">
     <table class="table sticky text-center">
         <thead>
           <tr>
             <th scope="col">ID</th>
+            <th scope="col">Photo</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
             <th scope="col">Course</th>
@@ -200,21 +218,23 @@
           {% for row in students %}
           <tr>
             <td>{{row.1}}</td>
+            <td><img src ='https://res.cloudinary.com/edejed/image/upload/v1642341868/student/{{row.1}}.jpg'> </td>
             <td>{{row.2}}</td>
             <td>{{row.3}}</td>
             <td>{{row.4}}</td>
             <td>{{row.5}}</td>
             <td>{{row.6}}</td>
             <td>
-              <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" >edit</a>
-              <a href="/delete_stud/{{ row.0 }}" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure For Delete?')">delete</a>
+              <a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{row.0}}" class="btn btn-warning btn-sm" ><i class="bi bi-pencil-square"></i></a>
+              <a href="/delete_stud/{{ row.1 }}" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure For Delete?')"><i class="bi bi-trash"></i></a>
             </td>
           </tr>
           {% endfor  %}
         </tbody>
       </table>
     </div>
-
+  </div>
+  </div>
 </section>
 
 {% endblock %}

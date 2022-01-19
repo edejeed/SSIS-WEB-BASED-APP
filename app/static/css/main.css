@@ -65,11 +65,15 @@ a.active {
     border: #816752;
 }
 
+.scrollable{
+    height: 340px;
+    overflow: scroll;
+}
+
 .table{
-    width: 1120px;
+    width: 1095px;
     background: #E0D4CB !important;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
     overflow-y: auto;
 }
 
@@ -78,17 +82,11 @@ a.active {
     top: 0;
     background: #E0D4CB;
     z-index: 1;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-}
-
-.scrollable{
-    height: 390px;
-    overflow: scroll;
 }
 
 .content {
     font-family: 'Fira Sans', sans-serif;
+    background: #E9E4E0;
 }
 
 a.btn{
@@ -128,4 +126,61 @@ footer {
 
 footer h1 {
     font-size: small;
+}
+
+
+.side-navbar {
+    width: 180px;
+    height: 100%;
+    position: fixed;
+    margin-left: -300px;
+    background-color: #0C3B2E;
+    transition: 0.5s;
+  }
+  
+  .nav-link:active,
+  .nav-link:focus,
+  .nav-link:hover {
+    background-color: #ffffff26;
+  }
+  
+  .my-container {
+    transition: 0.4s;
+  }
+  
+  .active-nav {
+    margin-left: 0;
+  }
+  
+  /* for main section */
+  .active-cont {
+    margin-left: 180px;
+  }
+  
+  #menu-btn {
+    background-color: #0C3B2E;
+    color: #fff;
+    margin-left: -62px;
+  }
+
+  td img{
+      width: 50px;
+      height: 50px;
+      border-radius: 30px;
+      border: 1px solid #000000;
+  }
+
+.page-item.prev-page a{
+    background: #af865f;
+    color: #fff;
+}
+
+.page-item.next-page a{
+    background: #af865f;
+    color: #fff;
+}
+
+.page-item a{
+    background: #ffffff;
+    color: rgb(75, 75, 75);    
 }

@@ -1,73 +1,104 @@
 from . import student
-from flask import Flask, render_template, url_for, flash, request, redirect
+from flask import render_template, url_for, flash, request, redirect
 from app import mysql
+import os
+from cloudinary.uploader import upload, destroy
+from app.views.students.forms import Uploader
 
 #********** Student **********
 
-@student.route("/")
+@student.route("/", methods = ['POST', 'GET'])
 def home():
+    form = Uploader()
+    if request.method == "POST":
+        id = request.form['id']
+        Firstname = request.form['first']
+        Lastname = request.form['last']
+        image = form.profile.data
+        Course = request.form.get('course', False)
+        Level = request.form.get('year', False)
+        Gender = request.form.get('gender', False)
+        cur = mysql.connection.cursor() 
+        check = [id]
+        count = cur.execute('select * from student where id=%s', check)
+
+        if not id or not Firstname or not Lastname or not Course or not Level or not Gender:
+            flash("All fields required", "error")
+            return redirect(url_for('student.home'))
+        
+        if count == 0:
+            if image:
+                upload(image.read(),public_id='student/{}'.format(id))
+                flash("Data Successfully Added", "success")
+                cur = mysql.connection.cursor()
+                cur.execute("INSERT INTO student (id, Firstname, Lastname, Course, Level, Gender) VALUES (%s, %s, %s, %s, %s, %s)", (id, Firstname, Lastname, Course, Level, Gender ))
+                mysql.connection.commit()
+                return redirect(url_for('student.home'))
+            else:
+                flash("Please Select a File", "error")
+        else:
+            flash("Student ID Already Exist", "error")
+            return redirect(url_for('student.home'))
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT  * FROM colleges")
     cur = mysql.connection.cursor()
     cur.execute("SELECT  * FROM student")
     cure = mysql.connection.cursor()
     cure.execute("SELECT  * FROM courses")
     data = cur.fetchall()
     course= cure.fetchall()
+    college= cursor.fetchall()
     cur.close()
 
-    return render_template('index.html', students=data, cor = course)
-
-@student.route('/insert', methods = ['POST'])
-def insert():
-    id = request.form['id']
-    Firstname = request.form['first']
-    Lastname = request.form['last']
-    Course = request.form['course']
-    Level = request.form['year']
-    Gender = request.form['gender']
-    cur = mysql.connection.cursor()
-    check = [id]
-    count = cur.execute('select * from student where id=%s', check)
-
-    if not id or not Firstname or not Lastname or not Course or not Level or not Gender:
-        flash("All fields required", "error")
-        return redirect(url_for('student.home'))
-
-    if count == 0:
-        if request.method == "POST":
-            flash("Data Successfully Added", "success")
-            cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO student (id, Firstname, Lastname, Course, Level, Gender) VALUES (%s, %s, %s, %s, %s, %s)", (id, Firstname, Lastname, Course, Level, Gender ))
-            mysql.connection.commit()
-            return redirect(url_for('student.home'))
-    else:
-        flash("Student ID Already Exist", "error")
-        return redirect(url_for('student.home'))
+    return render_template('index.html', students=data, cor = course, form = form, college=college)
 
 @student.route('/update_student',methods=['POST','GET'])
 def update_student():
-
+    form = Uploader()
+    id = request.form['id']
     if request.method == 'POST':
-        student_id = request.form['studid']
-        stud_id = request.form['id']
-        Firstname = request.form['first']
-        Lastname = request.form['last']
-        Course = request.form['course']
-        Level = request.form['year']
-        Gender = request.form['gender']
-        cur = mysql.connection.cursor()
-        cur.execute("""
-               UPDATE student
-               SET id=%s, Firstname=%s, Lastname=%s, Course=%s, Level=%s,Gender=%s
-               WHERE studid=%s
-            """, (stud_id, Firstname, Lastname, Course, Level, Gender, student_id))
-        flash("Data Updated Successfully")
-        mysql.connection.commit()
-        return redirect(url_for('student.home'))
+        image = form.profile.data
+        if image:
+            upload(image.read(),public_id='student/{}'.format(id))
+            student_id = request.form['studid']
+            stud_id = request.form['id']
+            Firstname = request.form['first']
+            Lastname = request.form['last']
+            Course = request.form.get('course', False)
+            Level = request.form.get('year', False)
+            Gender = request.form.get('gender', False)
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                UPDATE student
+                SET id=%s, Firstname=%s, Lastname=%s, Course=%s, Level=%s,Gender=%s
+                WHERE studid=%s
+                """, (stud_id, Firstname, Lastname, Course, Level, Gender, student_id))
+            flash("Data Updated Successfully")
+            mysql.connection.commit()
+            return redirect(url_for('student.home'))
+        else:
+            student_id = request.form['studid']
+            stud_id = request.form['id']
+            Firstname = request.form['first']
+            Lastname = request.form['last']
+            Course = request.form.get('course', False)
+            Level = request.form.get('year', False)
+            Gender = request.form.get('gender', False)
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                UPDATE student
+                SET id=%s, Firstname=%s, Lastname=%s, Course=%s, Level=%s,Gender=%s
+                WHERE studid=%s
+                """, (stud_id, Firstname, Lastname, Course, Level, Gender, student_id))
+            flash("Data Updated Successfully")
+            mysql.connection.commit()
+            return redirect(url_for('student.home'))
 
-@student.route('/delete_stud/<string:studid>', methods = ['POST', 'GET'])
-def delete_stud(studid):
+@student.route('/delete_stud/<string:id>', methods = ['POST', 'GET'])
+def delete_stud(id):
+    destroy(public_id="student/{}".format(id))
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM student WHERE studid=%s", (studid,))
+    cur.execute("DELETE FROM student WHERE id=%s", (id,))
     mysql.connection.commit()
     flash("Record Has Been Deleted Successfully", "success")
     return redirect(url_for('student.home'))
