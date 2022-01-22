@@ -2,6 +2,7 @@ from . import student
 from flask import render_template, url_for, flash, request, redirect
 from app import mysql
 import os
+import random
 from cloudinary.uploader import upload, destroy
 from app.views.students.forms import Uploader
 
@@ -28,10 +29,11 @@ def home():
         
         if count == 0:
             if image:
-                upload(image.read(),public_id='student/{}'.format(id))
+                result = upload(image.read(),public_id='student/{}'.format(id))
+                url = result.get('url')
                 flash("Data Successfully Added", "success")
                 cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO student (id, Firstname, Lastname, Course, Level, Gender) VALUES (%s, %s, %s, %s, %s, %s)", (id, Firstname, Lastname, Course, Level, Gender ))
+                cur.execute("INSERT INTO student (id, Firstname, Lastname, Course, Level, Gender, img_url) VALUES (%s, %s, %s, %s, %s, %s, %s)", (id, Firstname, Lastname, Course, Level, Gender, url ))
                 mysql.connection.commit()
                 return redirect(url_for('student.home'))
             else:
@@ -55,11 +57,13 @@ def home():
 @student.route('/update_student',methods=['POST','GET'])
 def update_student():
     form = Uploader()
+    ran = random.randint(0,10)
     id = request.form['id']
     if request.method == 'POST':
         image = form.profile.data
         if image:
-            upload(image.read(),public_id='student/{}'.format(id))
+            result = upload(image.read(),public_id='student/{}'.format(id+ str(ran)))
+            url = result.get('url')
             student_id = request.form['studid']
             stud_id = request.form['id']
             Firstname = request.form['first']
@@ -70,10 +74,10 @@ def update_student():
             cur = mysql.connection.cursor()
             cur.execute("""
                 UPDATE student
-                SET id=%s, Firstname=%s, Lastname=%s, Course=%s, Level=%s,Gender=%s
+                SET id=%s, Firstname=%s, Lastname=%s, Course=%s, Level=%s,Gender=%s, img_url=%s
                 WHERE studid=%s
-                """, (stud_id, Firstname, Lastname, Course, Level, Gender, student_id))
-            flash("Data Updated Successfully")
+                """, (stud_id, Firstname, Lastname, Course, Level, Gender, url, student_id))
+            flash("Data Updated Successfully" , "success")
             mysql.connection.commit()
             return redirect(url_for('student.home'))
         else:
@@ -90,7 +94,7 @@ def update_student():
                 SET id=%s, Firstname=%s, Lastname=%s, Course=%s, Level=%s,Gender=%s
                 WHERE studid=%s
                 """, (stud_id, Firstname, Lastname, Course, Level, Gender, student_id))
-            flash("Data Updated Successfully")
+            flash("Data Updated Successfully" , "success")
             mysql.connection.commit()
             return redirect(url_for('student.home'))
 

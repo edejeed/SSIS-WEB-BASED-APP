@@ -65,7 +65,7 @@
                 {% if co.3 == col.1%}
                 <option>{{co.1}}</option>
                 {%endif%}
-                {% endfor %}
+                {% endfor %}  
               </optgroup>
               {%endfor%}
               </select>
@@ -144,10 +144,16 @@
             Course:
             <div class="input-group mb-3" > 
               <select class="custom-select" name="course" required>
-                <option disabled selected="">{{row.4}}</option>
+                <option disabled>{{row.4}}</option>
+                {% for col in college %}
+                <optgroup label="{{col.1}}">
                 {% for co in cor %}
+                {% if co.3 == col.1%}
                 <option>{{co.1}}</option>
-                {% endfor %}
+                {%endif%}
+                {% endfor %}  
+              </optgroup>
+              {%endfor%}
               </select>
             </div>
           </div>
@@ -156,7 +162,7 @@
             Year Level:
             <div class="input-group mb-3" > 
               <select class="custom-select" name="year" required>
-                <option disabled selected="">{{row.5}}</option>
+                <option disabled>{{row.5}}</option>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -218,7 +224,7 @@
           {% for row in students %}
           <tr>
             <td>{{row.1}}</td>
-            <td><img src ='https://res.cloudinary.com/edejed/image/upload/v1642341868/student/{{row.1}}.jpg'> </td>
+            <td><img src ='{{row.7}}'> </td>
             <td>{{row.2}}</td>
             <td>{{row.3}}</td>
             <td>{{row.4}}</td>
