@@ -1,6 +1,6 @@
 # SSIS-WEB-BASED-APP
 
-![capture](readmeFiles/capture.PNG)
+![capture](readmeFiles/snip.PNG)
 
 # MAIN FEATURES
 DISPLAY DATA <br />
