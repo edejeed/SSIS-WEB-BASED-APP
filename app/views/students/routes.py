@@ -109,7 +109,6 @@ def delete_stud(id):
 
 @student.route('/searchstudent', methods=['GET', 'POST'])
 def searchstudent():
-    form = Uploader()
     field = request.form.get('student')
     cur = mysql.connection.cursor()
     cur.execute("SELECT  * FROM student ")
@@ -159,6 +158,6 @@ def searchstudent():
         flash("Input All fields", "Error")
 
     if len(result) !=0:
-        return render_template('index.html', students=result, form = form)
+        return render_template('index.html', students=result)
     else:
         return redirect(url_for('student.home'))
